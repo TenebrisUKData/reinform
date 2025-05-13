@@ -1,0 +1,24 @@
+version: '3'
+services:
+  app:
+    build: ..
+    container_name: reinformed-app
+    restart: always
+    env_file:
+      - ../.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../public:/app/public
+      - ../articles:/app/articles
+  nginx:
+    image: nginx:alpine
+    container_name: reinformed-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../public:/usr/share/nginx/html
+    depends_on:
+      - app
